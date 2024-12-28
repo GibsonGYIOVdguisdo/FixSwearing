@@ -15,15 +15,17 @@ def contains_bad_words(string):
         return True
   return False
 
-print(banned_words)
+print(f"banned_words: {banned_words}")
+
 while True: # Main loo
   with mic as source:
     audio = r.listen(source)
   try:
-    words = r.recognize_google(audio).split(" ")
+    text = r.recognize_google(audio)
   except:
-    words = []
-    print("Could not recognise")
+    text = ""
+  print(text)
+  print(contains_bad_words(text))
 
 # r.recognize_sphinx(audio) works offline but is less accurate
 # r.recognize_google(audio) only works online but is very accurate
