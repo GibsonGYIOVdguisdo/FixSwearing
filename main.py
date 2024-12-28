@@ -1,6 +1,4 @@
 import speech_recognition as sr
-r = sr.Recognizer() # Create recogniser instance
-mic = sr.Microphone() # Create microphone instance
 
 def get_banned_words():
     banned_words = []
@@ -19,6 +17,8 @@ def contains_bad_words(string):
     return False
 
 def main():
+    r = sr.Recognizer() # Create recogniser instance
+    mic = sr.Microphone() # Create microphone instance
     while True: # Main loo
         with mic as source:
             audio = r.listen(source)
