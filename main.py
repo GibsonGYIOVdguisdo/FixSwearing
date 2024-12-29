@@ -1,25 +1,38 @@
+from typing import List
+
 import speech_recognition as sr
 
-def get_banned_words():
-    banned_words = []
-    with open("word_list.txt") as word_list:
-        for word in word_list.readlines():
-            banned_words.append(word.strip())
-    return banned_words
+class BannedWords:
 
-def contains_bad_words(text):
-    banned_words = get_banned_words()
-    words = text.split()
-    for word in words:
-        for banned_word in banned_words:
-            if word.lower() == banned_word.lower():
-                return True
-    return False
+    BANNED_WORD_FILE = "word_list.txt"
+
+    def __init__(self):
+        """Initialise banned words"""
+        self._banned_words = self._get_banned_words_fom_file()
+
+    @classmethod
+    def _get_banned_words_fom_file(cls) -> List[str]:
+        """Return list of banned words from file"""
+        banned_words = []
+        with open(cls.BANNED_WORD_FILE) as fh:
+            for word in fh.readlines():
+                banned_words.append(word.strip())
+        return banned_words
+
+    def contains_banned_word(self, text: str) -> bool:
+        """Check if text contains a bad word"""
+        words = text.split()
+        for word in words:
+            for banned_word in self._banned_words:
+                if word.lower() == banned_word.lower():
+                    return True
+        return False
 
 def bad_word_found():
     print("run stuff")
 
 def main():
+    banned_words = BannedWords()
     r = sr.Recognizer() # Create recogniser instance
     mic = sr.Microphone() # Create microphone instance
     print("began listening")
@@ -31,7 +44,8 @@ def main():
             text = r.recognize_google(audio)
         except:
             text = ""
-        if text != "" and contains_bad_words(text):
+
+        if text != "" and banned_words.contains_bad_words(text):
             bad_word_found()
         else:
             print(text)
