@@ -38,7 +38,7 @@ def main():
     r = sr.Recognizer() # Create recogniser instance
     mic = sr.Microphone() # Create microphone instance
     print("began listening")
-    while True: # Main loo
+    while True: # Main loop
         with mic as source:
             r.adjust_for_ambient_noise(source)
             audio = r.listen(source)
