@@ -15,8 +15,10 @@ class BannedWords:
         """Return list of banned words from file"""
         banned_words = []
         with open(cls.BANNED_WORD_FILE) as fh:
-            for word in fh.readlines():
-                banned_words.append(word.strip())
+            return [
+                word.strip()
+                for word in fh.readlines()
+            ]
         return banned_words
 
     def contains_banned_word(self, text: str) -> bool:
