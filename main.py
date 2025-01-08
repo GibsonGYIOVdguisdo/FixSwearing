@@ -30,21 +30,13 @@ class BannedWords:
                     return True
         return False
 
-class BluetoothDevice:
-    def __init__(self, mac_address: str):
-        self.client = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-        self.client.connect(mac_address)
-    
-    def send(self, data: bytes):
-        self.client.send(data)
-
 def main():
     banned_words = BannedWords()
     r = sr.Recognizer() # Create recogniser instance
     mic = sr.Microphone() # Create microphone instance
     
     client = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-    client.connect(os.environ["MAX_ADDRESS"])
+    client.connect(os.environ["MAC_ADDRESS"])
 
     while True: # Main loop
         with mic as source:
