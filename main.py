@@ -8,10 +8,10 @@ class BannedWords:
 
     def __init__(self):
         """Initialise banned words"""
-        self._banned_words = self._get_banned_words_fom_file()
+        self._banned_words = self._get_banned_words_from_file()
 
     @classmethod
-    def _get_banned_words_fom_file(cls) -> List[str]:
+    def _get_banned_words_from_file(cls) -> List[str]:
         """Return list of banned words from file"""
         banned_words = []
         with open(cls.BANNED_WORD_FILE) as fh:
@@ -47,7 +47,7 @@ def main():
         except:
             text = ""
 
-        if text != "" and banned_words.contains_bad_words(text):
+        if text != "" and banned_words.contains_banned_word(text):
             bad_word_found()
         else:
             print(text)
