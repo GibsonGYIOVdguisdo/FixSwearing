@@ -47,7 +47,7 @@ def main():
     mic = sr.Microphone() # Create microphone instance
     
     client = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-    client.connect(os.environ["MAC_ADDRESS"])
+    client.connect((os.environ["MAC_ADDRESS"], 1))
     client = None
     while True: # Main loop
         with mic as source:
