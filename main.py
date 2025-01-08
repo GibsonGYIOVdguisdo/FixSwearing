@@ -39,8 +39,7 @@ def processAudio(r, audio, client, banned_words):
 
     if text != "" and banned_words.contains_banned_word(text):
         client.send(b"1")
-    else:
-        print(text)
+    print(text)
 
 def main():
     banned_words = BannedWords()
