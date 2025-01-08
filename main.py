@@ -1,7 +1,7 @@
 from typing import List
-
+import socket
 import speech_recognition as sr
-
+import os
 class BannedWords:
 
     BANNED_WORD_FILE = "word_list.txt"
@@ -30,14 +30,22 @@ class BannedWords:
                     return True
         return False
 
-def bad_word_found():
-    print("run stuff")
+class BluetoothDevice:
+    def __init__(self, mac_address: str):
+        self.client = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+        self.client.connect(mac_address)
+    
+    def send(self, data: bytes):
+        self.client.send(data)
 
 def main():
     banned_words = BannedWords()
     r = sr.Recognizer() # Create recogniser instance
     mic = sr.Microphone() # Create microphone instance
-    print("began listening")
+    
+    client = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+    client.connect(os.environ["MAX_ADDRESS"])
+
     while True: # Main loop
         with mic as source:
             r.adjust_for_ambient_noise(source)
@@ -48,7 +56,7 @@ def main():
             text = ""
 
         if text != "" and banned_words.contains_banned_word(text):
-            bad_word_found()
+            client.send(b"1")
         else:
             print(text)
     # r.recognize_sphinx(audio) works offline but is less accurate
