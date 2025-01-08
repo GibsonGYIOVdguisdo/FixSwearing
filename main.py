@@ -2,6 +2,7 @@ from typing import List
 import socket
 import speech_recognition as sr
 import os
+import threading
 class BannedWords:
 
     BANNED_WORD_FILE = "word_list.txt"
@@ -29,6 +30,17 @@ class BannedWords:
                 if word.lower().startswith(banned_word.lower()):
                     return True
         return False
+    
+def processAudio(r, audio, client, banned_words):
+    try:
+        text = r.recognize_google(audio)
+    except:
+        text = ""
+
+    if text != "" and banned_words.contains_banned_word(text):
+        client.send(b"1")
+    else:
+        print(text)
 
 def main():
     banned_words = BannedWords()
@@ -37,20 +49,12 @@ def main():
     
     client = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
     client.connect(os.environ["MAC_ADDRESS"])
-
+    client = None
     while True: # Main loop
         with mic as source:
             r.adjust_for_ambient_noise(source)
             audio = r.listen(source)
-        try:
-            text = r.recognize_google(audio)
-        except:
-            text = ""
-
-        if text != "" and banned_words.contains_banned_word(text):
-            client.send(b"1")
-        else:
-            print(text)
+        threading.Thread(target=processAudio, args=[r, audio, client, banned_words]).start()
     # r.recognize_sphinx(audio) works offline but is less accurate
     # r.recognize_google(audio) only works online but is very accurate
 
