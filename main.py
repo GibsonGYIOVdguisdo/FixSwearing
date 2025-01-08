@@ -52,7 +52,7 @@ def main():
     while True: # Main loop
         with mic as source:
             r.adjust_for_ambient_noise(source)
-            audio = r.listen(source)
+            audio = r.record(mic, duration=5)
         threading.Thread(target=processAudio, args=[r, audio, client, banned_words]).start()
     # r.recognize_sphinx(audio) works offline but is less accurate
     # r.recognize_google(audio) only works online but is very accurate
