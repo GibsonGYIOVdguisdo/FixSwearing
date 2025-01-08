@@ -26,7 +26,7 @@ class BannedWords:
         words = text.split()
         for word in words:
             for banned_word in self._banned_words:
-                if word.lower() == banned_word.lower():
+                if word.lower().startswith(banned_word.lower()):
                     return True
         return False
 
